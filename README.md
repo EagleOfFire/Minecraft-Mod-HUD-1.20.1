@@ -5,9 +5,6 @@ A lightweight and customizable Heads-Up Display (HUD) mod for Minecraft version 
 ## Features
 
 * **Player Stats**: Display health, hunger, armor, and experience levels.
-* **Coordinates & Direction**: Show current X, Y, Z coordinates and facing direction.
-* **Biome Info**: Identify the current biome you're standing in.
-* **FPS & TPS**: Monitor your frames per second (FPS) and ticks per second (TPS).
 * **Customizable Layout**: Adjust the position, color, and font of each HUD element.
 * **Performance-Focused**: Minimal impact on game performance.
 * **Mod Compatibility**: Works alongside popular mods and mod loaders.
