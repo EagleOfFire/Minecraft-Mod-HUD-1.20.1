@@ -39,7 +39,7 @@ public class HUDoverlay {
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent.Pre event) {
         if ((event.getOverlay().id().getPath().equals("player_health") || (event.getOverlay().id().getPath().equals("food_level")))) {
-            //event.setCanceled(true);
+            event.setCanceled(true);
 
             GuiGraphics guiGraphics = event.getGuiGraphics();
             Minecraft mc = Minecraft.getInstance();
@@ -66,16 +66,16 @@ public class HUDoverlay {
             guiGraphics.blit(GREEN_HEALTH, 3, 5, 0, 0, (int)(health_width*healthRatio), health_height, health_width, health_height);
             guiGraphics.blit(HEALTH_BAR, 2, 2, 0, 0, health_outline_width, health_outline_height, health_outline_width, health_outline_height);
 
-            guiGraphics.blit(HUNGER_BAR, 3, 16, 0, 0, hunger_bar_width, hunger_bar_height, hunger_bar_width, hunger_bar_height);
-            guiGraphics.blit(HUNGER_STATE, 7, 16, 0, 0, hunger_state_width, hunger_state_height, hunger_state_width, hunger_state_height);
+            guiGraphics.blit(HUNGER_BAR, 3, 30, 0, 0, hunger_bar_width, hunger_bar_height, hunger_bar_width, hunger_bar_height);
+            guiGraphics.blit(HUNGER_STATE, 7, 30, 0, 0, hunger_state_width, hunger_state_height, hunger_state_width, hunger_state_height);
 
             for (int i = 0; i <= 20; i++) {
                 if ((foodLevel >= i) && (i != 0)) {
                     if (i % 2 == 0) {
-                        guiGraphics.blit(HUNGER_UNIT, 22 + (i * 8), 18, 0, 0, unit_width, unit_heihgt, unit_width, unit_heihgt);
+                        guiGraphics.blit(HUNGER_UNIT, 22 + (i * 8), 32, 0, 0, unit_width, unit_heihgt, unit_width, unit_heihgt);
                     } else {
                         if (i == foodLevel) {
-                            guiGraphics.blit(HUNGER_UNIT_HALF, 30 + (i * 8), 18, 0, 0, unit_width / 2, unit_heihgt, unit_width / 2, unit_heihgt);
+                            guiGraphics.blit(HUNGER_UNIT_HALF, 30 + (i * 8), 32, 0, 0, unit_width / 2, unit_heihgt, unit_width / 2, unit_heihgt);
                         }
                     }
                 }
