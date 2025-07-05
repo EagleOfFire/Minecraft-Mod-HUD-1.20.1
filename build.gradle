@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 version = mod_version
@@ -82,19 +83,38 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly files('libs/MagicSpells-4.0-Beta-14_NATHOX.jar')
+    compileOnly files('libs/bukkit-plugin-1.0-SNAPSHOT.jar')
+    implementation 'org.yaml:snakeyaml:2.2'
 }
+
+shadowJar {
+    // On embarque seulement snakeyaml (ou d'autres libs, mais pas Minecraft)
+    dependencies {
+        include(dependency('org.yaml:snakeyaml'))
+    }
+    // Surtout, ne fais pas from configurations.runtimeClasspath (sauf si filtré)
+}
+
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
 def replaceProperties = [
-        minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-        forge_version: forge_version, forge_version_range: forge_version_range,
+        minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+        forge_version       : forge_version, forge_version_range: forge_version_range,
         loader_version_range: loader_version_range,
-        mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-        mod_authors: mod_authors, mod_description: mod_description
+        mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+        mod_authors         : mod_authors, mod_description: mod_description
 ]
 processResources {
     inputs.properties replaceProperties

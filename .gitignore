@@ -26,3 +26,7 @@ forge*changelog.txt
 
 #assets
 /src/main/resources/
+
+# Ignore local build and runtime directories
+libs/
+run/

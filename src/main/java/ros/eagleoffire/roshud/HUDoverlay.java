@@ -12,6 +12,8 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import ros.eagleoffire.roshud.network.ModMessages;
+import ros.eagleoffire.roshud.network.packet.ManaValueQueryC2SPacket;
 
 @Mod.EventBusSubscriber(modid = ROSHUD.MODID, value = Dist.CLIENT)
 public class HUDoverlay {
@@ -39,10 +41,12 @@ public class HUDoverlay {
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent.Pre event) {
         if ((event.getOverlay().id().getPath().equals("player_health") || (event.getOverlay().id().getPath().equals("food_level")))) {
-            //event.setCanceled(true);
+            event.setCanceled(true);
 
             GuiGraphics guiGraphics = event.getGuiGraphics();
             Minecraft mc = Minecraft.getInstance();
+
+            //ModMessages.sendToServer(new ManaValueQueryC2SPacket(mc.player.getName().getString()));
 
             if (mc.player != null) {
                 Player player = mc.player;
