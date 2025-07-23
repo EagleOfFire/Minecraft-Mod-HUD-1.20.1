@@ -38,6 +38,8 @@ public class HUDoverlay {
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent.Pre event) {
+        //System.out.println("onRenderGameOverlay: " + event.getOverlay().id().getPath());
+        if ((event.getOverlay().id().getPath().equals("experience_bar"))) { event.setCanceled(true);}
         if ((event.getOverlay().id().getPath().equals("player_health") || (event.getOverlay().id().getPath().equals("food_level")))) {
             event.setCanceled(true);
 
