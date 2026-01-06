@@ -21,9 +21,9 @@ public class ChakraHudOverlay {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, FILLED_CHAKRA);
+        guiGraphics.blit(FILLED_CHAKRA, 4, 19, 0, 0, (int) (chakra_width * chakraRatio), chakra_height, chakra_width, chakra_height);
         RenderSystem.setShaderTexture(0, EMPTY_CHAKRA);
         guiGraphics.blit(EMPTY_CHAKRA, 3, 16, 0, 0, chakra_outline_width, chakra_outline_height, chakra_outline_width, chakra_outline_height);
-        RenderSystem.setShaderTexture(0, FILLED_CHAKRA);
-        guiGraphics.blit(FILLED_CHAKRA, 3, 19, 0, 0, (int) (chakra_width * chakraRatio), chakra_height, chakra_width, chakra_height);
     });
 }
