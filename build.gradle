@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.hidetake.ssh' version '2.12.0'
 }
 
 version = mod_version
@@ -116,6 +117,7 @@ def replaceProperties = [
         mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
         mod_authors         : mod_authors, mod_description: mod_description
 ]
+
 processResources {
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
@@ -143,4 +145,62 @@ jar.finalizedBy('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+ext.privateConfigFile = file 'private.properties'
+privateConfigFile.withReader {
+    def p = new Properties()
+    p.load(it)
+    project.ext.privateConfig = new ConfigSlurper().parse p
+}
+
+import org.hidetake.groovy.ssh.core.Remote
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.hidetake:groovy-ssh:2.12.0'
+}
+
+remotes {
+    deployServer{
+        host = privateConfig.ftp_adress
+        user = privateConfig.ftp_user
+        port = privateConfig.ftp_port as int
+        password = privateConfig.ftp_pw
+    }
+}
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+tasks.register("uploadJarSftp"){
+    dependsOn("jar")
+
+    doLast {
+        def libsDir = layout.buildDirectory.dir("libs").get().asFile
+
+        def candidates = fileTree(libsDir).matching {
+            include "*.jar"
+            exclude "*-source.jar", "*-javadoc.jar", "*-dev.jar"
+        }.files.toList().sort {a, b -> b.lastModified() <=> a.lastModified()}
+
+        if (candidates.isEmpty()) {
+            throw new GradleException("No jar found in ${libsDir}. Did the build produce a jar ?")
+        }
+
+        def jarFile = candidates[0]
+        def remoteDir = privateConfig.ftp_remote_dir ?: "."
+
+        logger.lifecycle("Uploading ${jarFile.name} -> ${privateConfig.ftp_adress}:${remoteDir}")
+
+        ssh.run {
+            session(remotes.deployServer as Remote){
+                put from: jarFile, into: remoteDir
+            }
+        }
+    }
 }
